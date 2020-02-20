@@ -7,10 +7,21 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.get('/notes', (request, response) => {
-  fs.readFile(path.join(__dirname, 'db,json'), 'utf8', (error, data) => {
+//returns all the notes in db.json
+// app.get('/notes', (request, response) => {
+//   fs.readFile(path.join(__dirname, 'db', 'db.json'),'utf8', (error, data) => {
+//     if(error){
+//       console.error(error)
+//     }
+//     let notes = JSON.parse(data)
+//     console.log(notes)
+//     response.json(notes)
+//   })
+// })
 
-  })
+app.get('/notes', (request, response) => {
+  //must provide absolute path to sendFile even if you have static
+  response.sendFile(path.join(__dirname, 'public', 'notes.html'))
 })
 
 
