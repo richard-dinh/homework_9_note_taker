@@ -19,8 +19,24 @@ app.get('/api/notes', (request, response) => {
       console.error(error)
     }
     let notes = JSON.parse(data)
-    console.log(notes)
     response.json(notes)
+  })
+})
+
+//to POST to db.json
+app.post('/api/notes', (request, response)=>{
+  fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, data)=>{
+    if(error){
+      console.error(error)
+    }
+    let notes = JSON.parse(data)
+    notes.push(request.body)
+    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), error=>{
+      if(error){
+        console.error(error)
+      }
+      response.sendStatus(200)
+    })
   })
 })
 
