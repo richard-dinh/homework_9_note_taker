@@ -40,5 +40,29 @@ app.post('/api/notes', (request, response)=>{
   })
 })
 
+app.delete('/api/notes/:id', (request, response)=>{
+  fs.readFile(path.join(__dirname, 'db', 'db.json'), 'utf8', (error, data)=>{
+    if(error){
+      console.error(error)
+    }
+    let notes = JSON.parse(data)
+    //maps the note array and for each element, returns the title of the note
+    //then checks if it matches request.params.id
+    let index = notes.map(note =>{return note.title}).indexOf(request.params.id)
+    console.log(index)
+    //indexOf returns -1 if the element you are looking for is not in array
+    if(index === -1){
+      console.error(new Error('Note does not exist!'))
+    }
+    //removing the instance from array
+    notes.splice(index, 1)
+    fs.writeFile(path.join(__dirname, 'db', 'db.json'), JSON.stringify(notes), error=>{
+      if(error){
+        console.error(error)
+      }
+      response.sendStatus(200)
+    })
+  })
+})
 //passes in the port given by heroku or 3000
 app.listen(process.env.PORT || 3000)
